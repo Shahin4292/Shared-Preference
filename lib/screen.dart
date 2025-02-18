@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Screen extends StatelessWidget {
-  Screen({super.key});
+class Screen extends StatefulWidget {
+  const Screen({super.key});
 
+  @override
+  State<Screen> createState() => _ScreenState();
+}
+
+class _ScreenState extends State<Screen> {
   var nameController = TextEditingController();
+  static const String KEYNAME = "name";
+  var nameValue = "";
+
+  @override
+  void initState() {
+    super.initState();
+    getValue();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +34,12 @@ class Screen extends StatelessWidget {
           SizedBox(height: 20),
           ElevatedButton(
               onPressed: () async {
-                var name = nameController.text.toString();
+                // var name = nameController.text.toString();
                 var prefs = await SharedPreferences.getInstance();
+                prefs.setString(
+                    KEYNAME,
+                    nameController.text
+                        .toString()); // name are include not problem
               },
               child: Text("Saved")),
           SizedBox(height: 10),
@@ -30,5 +47,10 @@ class Screen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void getValue() async {
+    var prefs = await SharedPreferences.getInstance();
+    var getName = prefs.setString(KEYNAME, nameController.text.toString());
   }
 }
